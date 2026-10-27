@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: thermos-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=thermos_db
+
+  thermos-api:
+    build: .
+    container_name: thermos-api
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - THERMOS_API_KEY=${THERMOS_API_KEY}
+      - TRUSTED_HOSTS=${TRUSTED_HOSTS:-["localhost","127.0.0.1"]}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["http://localhost:5173"]}
+      - MONGODB_URL=mongodb://mongodb:27017
+      - DATABASE_NAME=thermos_db
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: thermos-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - thermos-api
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
