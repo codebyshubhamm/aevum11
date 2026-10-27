@@ -1,0 +1,49 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment files and secrets
+.env
+.env.*
+*.env
+!.env.example
+
+# Python virtual environments & databases
+.venv/
+venv/
+*.db
+*.sqlite
+thermos.db
+test_thermos.db
+
+# Editor directories and files
+.vscode/*
+! .vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Reference videos (avoid bloating git repo)
+reference-videos/*.mp4
+reference-videos/*.mov
+reference-videos/*.webm
+
+# Local test / debug dumps
+fires_response.json
+test_*.json
+test_*.mjs
+
